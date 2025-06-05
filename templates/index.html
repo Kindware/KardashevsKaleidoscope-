@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyson Sphere Planner - Cosmic Engineering Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <div class="container">
+        <header>
+            <h1>Dyson Sphere Planner</h1>
+            <p class="subtitle">Cosmic Engineering Interface</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="strategy-selector">
+                <h2>Construction Strategy</h2>
+                <select id="strategy">
+                    <option value="swarm">Dyson Swarm</option>
+                    <option value="ring">Dyson Ring</option>
+                    <option value="bubble">Dyson Bubble</option>
+                    <option value="quantum">Quantum-Entangled</option>
+                    <option value="temporal">Time-Manipulated</option>
+                    <option value="exotic">Exotic Matter</option>
+                    <option value="cosmic">Cosmic Engineering</option>
+                    <option value="dimensional">Dimensional</option>
+                    <option value="singularity">Post-Singularity</option>
+                    <option value="omniversal">Omniversal</option>
+                </select>
+            </div>
+
+            <div class="options">
+                <label>
+                    <input type="checkbox" id="include-colony">
+                    Include Colony Setup
+                </label>
+                <div class="year-input">
+                    <label for="start-year">Start Year:</label>
+                    <input type="number" id="start-year" value="2024" min="2024">
+                </div>
+            </div>
+
+            <button id="generate-plan" class="glow-button">Generate Plan</button>
+        </div>
+
+        <div class="results" style="display: none;">
+            <div class="metrics-panel">
+                <h2>Construction Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <span class="label">Total Time</span>
+                        <span class="value" id="total-time">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Completion Year</span>
+                        <span class="value" id="completion-year">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Total Mass</span>
+                        <span class="value" id="total-mass">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Energy Required</span>
+                        <span class="value" id="total-energy">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="advanced-metrics" style="display: none;">
+                <h2>Advanced Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <span class="label">Pocket Universes</span>
+                        <span class="value" id="pocket-universes">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Black Holes</span>
+                        <span class="value" id="black-holes">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Dimensions</span>
+                        <span class="value" id="dimensions">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Consciousness Uploads</span>
+                        <span class="value" id="consciousness-uploads">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">AI Evolution</span>
+                        <span class="value" id="ai-evolution">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Digital Realities</span>
+                        <span class="value" id="digital-realities">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phases-panel">
+                <h2>Construction Phases</h2>
+                <div class="phases-timeline" id="phases-timeline"></div>
+            </div>
+
+            <div class="orbital-grid">
+                <h2>Orbital Structure</h2>
+                <div class="grid-container" id="orbital-grid"></div>
+                <div class="grid-legend">
+                    <div class="legend-item"><span class="symbol">R</span> High Resource</div>
+                    <div class="legend-item"><span class="symbol">r</span> Medium Resource</div>
+                    <div class="legend-item"><span class="symbol">T</span> High Traffic</div>
+                    <div class="legend-item"><span class="symbol">t</span> Medium Traffic</div>
+                    <div class="legend-item"><span class="symbol">H</span> Hot Zone</div>
+                    <div class="legend-item"><span class="symbol">C</span> Cool Zone</div>
+                    <div class="legend-item"><span class="symbol">O</span> Collector</div>
+                    <div class="legend-item"><span class="symbol">#</span> Habitat</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html> 
