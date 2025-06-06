@@ -1,5 +1,11 @@
 # 🪐 Kardashev's Kaleidoscope
 
+You need ollama and a decent model, I like gemma3:12b or gemma3:12b-it-qat make sure ollama is running (ollama serve) and model is installed (ollama pull gemma3:12b)
+To just get a quick taste don't touch anything hit [generate plan] that will create a basic dyson sphere program that started now and ends in a few hundred years, then go all the way down and hit [generate story]
+and you can read the story of how your project came to be.  
+
+Also this is a silly toy, don't take it seriously or anything, just have fun make some neat stories, explore stuff!
+
 ### *The Dyson Sphere Planner & Post-Singularity Civilization Simulator*
 
 ---
