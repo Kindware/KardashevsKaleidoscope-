@@ -17,10 +17,92 @@
             <p class="subtitle">Cosmic Engineering Interface</p>
         </header>
 
+        <!-- User Variable Controls -->
+        <form id="variable-controls" class="variable-controls">
+            <fieldset>
+                <legend>Core Construction</legend>
+                <label title="The percentage of the sun's mass to use for construction.">Material Extraction (% of solar mass):
+                    <span class="tooltip-icon" data-tooltip="How much of the sun's mass is used for construction. Higher values mean more material, but also more risk and engineering challenge.">?</span>
+                    <input type="range" id="extraction_pct" min="0.1" max="10" step="0.1" value="1" title="Adjust how much of the sun's mass is extracted for the Dyson Sphere.">
+                    <span id="extraction_pct_val">1</span>%
+                </label>
+                <label title="Multiplier for the mass that must be transported. Higher values increase transport requirements.">Transport Mass Multiplier:
+                    <span class="tooltip-icon" data-tooltip="A multiplier for the mass that must be transported from the sun to the construction site. Higher values increase logistical challenge.">?</span>
+                    <input type="number" id="transport_mass_mult" min="0.1" max="5" step="0.1" value="1" title="Set the multiplier for the mass that must be transported.">
+                </label>
+                <label title="Assembly efficiency. 1 is default, higher is better.">Assembly Efficiency (1=default, &gt;1=better):
+                    <span class="tooltip-icon" data-tooltip="How efficiently components are assembled. Higher values mean faster, more resource-efficient construction.">?</span>
+                    <input type="number" id="assembly_eff" min="0.1" max="5" step="0.1" value="1" title="Set the efficiency of assembly operations.">
+                </label>
+                <label title="Thermal management efficiency. 1 is default, higher is better.">Thermal Management Efficiency (1=default, &gt;1=better):
+                    <span class="tooltip-icon" data-tooltip="How well the structure manages heat. Higher values mean better heat dissipation and system stability.">?</span>
+                    <input type="number" id="thermal_eff" min="0.1" max="5" step="0.1" value="1" title="Set the efficiency of thermal management systems.">
+                </label>
+            </fieldset>
+            <fieldset>
+                <legend>Colony</legend>
+                <label title="Initial population of the colony.">Initial Population:
+                    <span class="tooltip-icon" data-tooltip="The number of people starting in the Dyson Sphere colony. Affects early growth and resource needs.">?</span>
+                    <input type="number" id="colony_init_pop" min="10" max="100000" step="10" value="1000" title="Set the starting population for the colony.">
+                </label>
+                <label title="Annual growth rate of the colony population (percent).">Annual Growth Rate (%):
+                    <span class="tooltip-icon" data-tooltip="The yearly percentage increase in colony population. Influences expansion and resource consumption.">?</span>
+                    <input type="number" id="colony_growth_rate" min="0.1" max="10" step="0.1" value="2" title="Set the annual population growth rate for the colony.">
+                </label>
+                <label title="Maximum number of people the life support system can sustain.">Life Support Cap:
+                    <span class="tooltip-icon" data-tooltip="The maximum population the life support systems can handle. Exceeding this risks collapse.">?</span>
+                    <input type="number" id="colony_life_cap" min="1000" max="10000000" step="1000" value="1000000" title="Set the maximum supported population for the colony.">
+                </label>
+                <label title="Maximum amount of resources the colony can store.">Resource Cap:
+                    <span class="tooltip-icon" data-tooltip="The maximum amount of resources the colony can store at once. Affects sustainability and expansion.">?</span>
+                    <input type="number" id="colony_resource_cap" min="1000" max="10000000" step="1000" value="500000" title="Set the maximum resource storage for the colony.">
+                </label>
+            </fieldset>
+            <fieldset>
+                <legend>Galactic Expansion</legend>
+                <label title="Speed of probes as a fraction of the speed of light.">Probe Speed (fraction of c):
+                    <span class="tooltip-icon" data-tooltip="How fast your probes travel, as a fraction of the speed of light. Faster probes reach new stars sooner.">?</span>
+                    <input type="number" id="probe_speed" min="0.01" max="1" step="0.01" value="0.1" title="Set the speed of probes as a fraction of the speed of light.">
+                </label>
+                <label title="Time required to construct each Dyson Sphere (years).">Construction Time per Sphere (years):
+                    <span class="tooltip-icon" data-tooltip="How long it takes to build each Dyson Sphere. Shorter times mean faster galactic expansion.">?</span>
+                    <input type="number" id="sphere_construction_time" min="10" max="1000" step="10" value="400" title="Set the construction time for each sphere.">
+                </label>
+                <label title="Time required to build and launch each probe (years).">Probe Build/Launch Time (years):
+                    <span class="tooltip-icon" data-tooltip="How long it takes to build and launch each probe. Affects the pace of exploration.">?</span>
+                    <input type="number" id="probe_build_time" min="1" max="200" step="1" value="50" title="Set the build and launch time for each probe.">
+                </label>
+            </fieldset>
+            <fieldset>
+                <legend>Advanced/Exotic</legend>
+                <label title="Size of the quantum network for advanced/exotic construction.">Quantum Network Size:
+                    <span class="tooltip-icon" data-tooltip="The scale of your quantum communication network. Larger networks enable more advanced coordination and computation.">?</span>
+                    <input type="number" id="quantum_network_size" min="1" max="10000" step="1" value="1000" title="Set the size of the quantum network.">
+                </label>
+                <label title="Volume of exotic matter available for construction.">Exotic Matter Volume:
+                    <span class="tooltip-icon" data-tooltip="The amount of exotic matter available. Required for advanced and speculative engineering feats.">?</span>
+                    <input type="number" id="exotic_matter_vol" min="1" max="1000000000" step="1000" value="1000000" title="Set the available volume of exotic matter.">
+                </label>
+                <label title="Number of pocket universes accessible for construction.">Pocket Universes:
+                    <span class="tooltip-icon" data-tooltip="The number of alternate universes you can access for resources or expansion. Enables truly cosmic engineering.">?</span>
+                    <input type="number" id="pocket_universes" min="0" max="1000" step="1" value="0" title="Set the number of pocket universes accessed.">
+                </label>
+                <label title="Number of extra dimensions accessed for construction.">Dimensions Accessed:
+                    <span class="tooltip-icon" data-tooltip="How many extra dimensions your civilization can access. More dimensions unlock new possibilities.">?</span>
+                    <input type="number" id="dimensions_accessed" min="1" max="20" step="1" value="1" title="Set the number of extra dimensions accessed.">
+                </label>
+                <label title="Target level for AI evolution (higher = more advanced AI).">AI Evolution Target Level:
+                    <span class="tooltip-icon" data-tooltip="The sophistication of your AI. Higher levels enable more automation, creativity, and risk.">?</span>
+                    <input type="number" id="ai_evolution_level" min="1" max="10" step="0.1" value="2" title="Set the target AI evolution level.">
+                </label>
+            </fieldset>
+            <button type="button" id="reset-variables" title="Reset all variables to their default values."><span class="tooltip-icon" data-tooltip="Reset all input fields to their original default values.">?</span>Reset to Default</button>
+        </form>
+
         <div class="control-panel">
             <div class="strategy-selector">
-                <h2>Construction Strategy</h2>
-                <select id="strategy">
+                <h2>Construction Strategy <span class="tooltip-icon" data-tooltip="Choose the overall approach for building your Dyson Sphere. Each strategy offers unique challenges and benefits.">?</span></h2>
+                <select id="strategy" title="Choose the overall construction strategy for your Dyson Sphere.">
                     <option value="swarm">Dyson Swarm</option>
                     <option value="ring">Dyson Ring</option>
                     <option value="bubble">Dyson Bubble</option>
@@ -35,17 +117,91 @@
             </div>
 
             <div class="options">
-                <label>
-                    <input type="checkbox" id="include-colony">
+                <label title="Include a self-sustaining colony as part of the construction plan.">
+                    <span class="tooltip-icon" data-tooltip="Toggle to include a self-sustaining colony in your Dyson Sphere plan. This affects resource and population calculations.">?</span>
+                    <input type="checkbox" id="include-colony" title="Toggle to include a colony in your plan.">
                     Include Colony Setup
                 </label>
                 <div class="year-input">
-                    <label for="start-year">Start Year:</label>
-                    <input type="number" id="start-year" value="2024" min="2024">
+                    <label for="start-year" title="The year construction begins.">Start Year:
+                        <span class="tooltip-icon" data-tooltip="Set the year when construction of your Dyson Sphere begins.">?</span>
+                    </label>
+                    <input type="number" id="start-year" value="2024" min="2024" title="Set the starting year for construction.">
                 </div>
             </div>
 
-            <button id="generate-plan" class="glow-button">Generate Plan</button>
+            <button id="generate-plan" class="glow-button" title="Generate a new Dyson Sphere construction plan with the selected options."><span class="tooltip-icon" data-tooltip="Generate a new plan using all the parameters you've set above.">?</span>Generate Plan</button>
+        </div>
+
+        <!-- New Feature Controls -->
+        <div class="feature-controls">
+            <div class="feature-tabs">
+                <button class="tab active" data-tab="alien">Alien Diplomacy</button>
+                <button class="tab" data-tab="evolution">Universe Evolution</button>
+                <button class="tab" data-tab="custom">Custom Megastructure</button>
+                <button class="tab" data-tab="virtual">Virtual Civilization</button>
+            </div>
+            <div class="feature-section" id="tab-alien">
+                <h2>Alien Diplomacy <span class="tooltip-icon" data-tooltip="Interact with advanced alien civilizations. Negotiate, trade, or defend your sphere from cosmic rivals.">?</span></h2>
+                <div class="alien-controls">
+                    <button id="check-alien-contacts" title="Check for new or existing alien civilizations making contact."><span class="tooltip-icon" data-tooltip="Scan for new alien encounters and review your current diplomatic status.">?</span>Check for Alien Contacts</button>
+                    <div id="alien-contacts-list" class="event-list"></div>
+                </div>
+            </div>
+            <div class="feature-section" id="tab-evolution" style="display:none;">
+                <h2>Universe Evolution <span class="tooltip-icon" data-tooltip="Simulate the long-term evolution of the solar system and galaxy as your megastructure changes the cosmos.">?</span></h2>
+                <div class="universe-controls">
+                    <button id="simulate-evolution" title="Simulate the evolution of the universe over the selected number of years."><span class="tooltip-icon" data-tooltip="Advance time and witness cosmic events like supernovae, black holes, and galactic expansion.">?</span>Simulate Evolution</button>
+                    <input type="range" id="evolution-years" min="1000" max="1000000" step="1000" value="10000" title="Select how many years to simulate in the universe evolution."><span class="tooltip-icon" data-tooltip="Drag to select how many years to simulate. Longer times reveal more dramatic changes.">?</span>
+                    <span id="evolution-years-value" title="Displays the number of years to simulate."><span class="tooltip-icon" data-tooltip="Shows the currently selected number of years for the simulation.">?</span>10,000 years</span>
+                    <div id="universe-events-list" class="event-list"></div>
+                </div>
+            </div>
+            <div class="feature-section" id="tab-custom" style="display:none;">
+                <h2>Custom Megastructure Editor <span class="tooltip-icon" data-tooltip="Design your own Dyson Sphere! Choose collector, habitat, transport, and thermal patterns for a unique structure.">?</span></h2>
+                <div class="custom-structure-controls">
+                    <div class="pattern-selectors">
+                        <select id="collector-pattern" title="Choose the collector pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the arrangement of energy collectors for your custom sphere.">?</span>
+                            <option value="spiral">Spiral</option>
+                            <option value="fractal">Fractal</option>
+                            <option value="lattice">Lattice</option>
+                            <option value="wave">Wave</option>
+                            <option value="quantum">Quantum</option>
+                        </select>
+                        <select id="habitat-pattern" title="Choose the habitat pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the arrangement of habitats for your custom sphere.">?</span>
+                            <option value="clusters">Clusters</option>
+                            <option value="rings">Rings</option>
+                            <option value="nodes">Nodes</option>
+                            <option value="spiral">Spiral</option>
+                            <option value="fractal">Fractal</option>
+                        </select>
+                        <select id="transport-pattern" title="Choose the transport network pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the transport network pattern for your custom sphere.">?</span>
+                            <option value="grid">Grid</option>
+                            <option value="spiral">Spiral</option>
+                            <option value="quantum">Quantum</option>
+                            <option value="void">Void</option>
+                        </select>
+                        <select id="thermal-pattern" title="Choose the thermal management pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the thermal management pattern for your custom sphere.">?</span>
+                            <option value="radial">Radial</option>
+                            <option value="spiral">Spiral</option>
+                            <option value="quantum">Quantum</option>
+                            <option value="void">Void</option>
+                        </select>
+                    </div>
+                    <button id="generate-custom" title="Generate a custom megastructure with the selected patterns."><span class="tooltip-icon" data-tooltip="Create a new custom megastructure using your selected patterns.">?</span>Generate Custom Structure</button>
+                    <div id="custom-structures-list" class="structure-list"></div>
+                </div>
+            </div>
+            <div class="feature-section" id="tab-virtual" style="display:none;">
+                <h2>Virtual Civilization <span class="tooltip-icon" data-tooltip="Upload consciousness, create digital realities, and watch your virtual society evolve inside the Dyson Sphere.">?</span></h2>
+                <div class="virtual-civilization-controls">
+                    <button id="initialize-virtual" title="Initialize a new virtual civilization inside the Dyson Sphere."><span class="tooltip-icon" data-tooltip="Start a new digital civilization within your megastructure.">?</span>Initialize Virtual Civilization</button>
+                    <button id="upload-consciousness" title="Upload digital consciousnesses into the virtual civilization."><span class="tooltip-icon" data-tooltip="Upload digital minds to populate your virtual society.">?</span>Upload Consciousness</button>
+                    <input type="number" id="consciousness-count" min="1" max="1000" value="100" title="Number of consciousnesses to upload."><span class="tooltip-icon" data-tooltip="Set how many digital minds to upload at once.">?</span>
+                    <button id="create-reality" title="Create a new virtual reality environment for digital life."><span class="tooltip-icon" data-tooltip="Create a new digital world for your uploaded minds to inhabit.">?</span>Create New Reality</button>
+                    <div id="virtual-events-list" class="event-list"></div>
+                </div>
+            </div>
         </div>
 
         <div class="results" style="display: none;">
@@ -108,21 +264,115 @@
 
             <div class="orbital-grid">
                 <h2>Orbital Structure</h2>
+                <div class="visualization-header">
+                    <span id="current-year">Year: 2024</span>
+                    <div class="progress-container">
+                        <div id="construction-progress"></div>
+                    </div>
+                </div>
                 <div class="grid-container" id="orbital-grid"></div>
                 <div class="grid-legend">
-                    <div class="legend-item"><span class="symbol">R</span> High Resource</div>
-                    <div class="legend-item"><span class="symbol">r</span> Medium Resource</div>
-                    <div class="legend-item"><span class="symbol">T</span> High Traffic</div>
-                    <div class="legend-item"><span class="symbol">t</span> Medium Traffic</div>
-                    <div class="legend-item"><span class="symbol">H</span> Hot Zone</div>
-                    <div class="legend-item"><span class="symbol">C</span> Cool Zone</div>
-                    <div class="legend-item"><span class="symbol">O</span> Collector</div>
-                    <div class="legend-item"><span class="symbol">#</span> Habitat</div>
+                    <div class="legend-item"><span class="symbol collector">O</span> Collector</div>
+                    <div class="legend-item"><span class="symbol habitat">#</span> Habitat</div>
+                    <div class="legend-item"><span class="symbol resource">R</span> High Resource</div>
+                    <div class="legend-item"><span class="symbol resource">r</span> Medium Resource</div>
+                    <div class="legend-item"><span class="symbol transport">T</span> High Traffic</div>
+                    <div class="legend-item"><span class="symbol transport">t</span> Medium Traffic</div>
+                    <div class="legend-item"><span class="symbol thermal">H</span> Hot Zone</div>
+                    <div class="legend-item"><span class="symbol thermal">C</span> Cool Zone</div>
                 </div>
             </div>
         </div>
+
+        <!-- Add this right after the simulation results section, before the closing main div -->
+        <div class="section" id="story-section">
+            <h2>Simulation Story</h2>
+            <div class="story-container">
+                <div id="story-content" class="story-text"></div>
+            </div>
+            <button id="generate-story" class="glow-button" onclick="generateStory()">
+                Generate Story
+            </button>
+        </div>
     </div>
 
+    <style>
+        .story-container {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        .story-text {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            text-align: justify;
+            white-space: pre-wrap;
+        }
+
+        #generate-story {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        #generate-story:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+        }
+
+        #generate-story:active {
+            transform: scale(0.95);
+        }
+    </style>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        // Add this to your existing JavaScript
+        function generateStory() {
+            const button = document.getElementById('generate-story');
+            button.disabled = true;
+            button.textContent = 'Generating Story...';
+            
+            fetch('/generate_story', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    strategy: document.getElementById('strategy').value,
+                    start_year: parseInt(document.getElementById('start-year').value),
+                    include_colony: document.getElementById('include-colony').checked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const storyContent = document.getElementById('story-content');
+                storyContent.textContent = data.story;
+                
+                button.disabled = false;
+                button.textContent = 'Generate Story';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                button.disabled = false;
+                button.textContent = 'Generate Story';
+                alert('Error generating story. Please try again.');
+            });
+        }
+    </script>
 </body>
 </html> 
