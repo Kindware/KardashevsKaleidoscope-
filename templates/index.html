@@ -64,13 +64,13 @@
                     <span class="tooltip-icon" data-tooltip="How fast your probes travel, as a fraction of the speed of light. Faster probes reach new stars sooner.">?</span>
                     <input type="number" id="probe_speed" min="0.01" max="1" step="0.01" value="0.1" title="Set the speed of probes as a fraction of the speed of light.">
                 </label>
-                <label title="Time required to construct each Dyson Sphere (years).">Construction Time per Sphere (years):
-                    <span class="tooltip-icon" data-tooltip="How long it takes to build each Dyson Sphere. Shorter times mean faster galactic expansion.">?</span>
-                    <input type="number" id="sphere_construction_time" min="10" max="1000" step="10" value="400" title="Set the construction time for each sphere.">
-                </label>
                 <label title="Time required to build and launch each probe (years).">Probe Build/Launch Time (years):
                     <span class="tooltip-icon" data-tooltip="How long it takes to build and launch each probe. Affects the pace of exploration.">?</span>
                     <input type="number" id="probe_build_time" min="1" max="200" step="1" value="50" title="Set the build and launch time for each probe.">
+                </label>
+                <label title="Construction speed modifier. Higher values mean faster construction due to better tools, training, or technology.">Construction Speed Modifier:
+                    <span class="tooltip-icon" data-tooltip="A multiplier for construction speed. Increase this to represent better tools, training, or advanced technology. 1 is default.">?</span>
+                    <input type="number" id="construction_speed_mod" min="0.1" max="5" step="0.1" value="1" title="Set the construction speed modifier.">
                 </label>
             </fieldset>
             <fieldset>
@@ -134,7 +134,7 @@
         </div>
 
         <!-- New Feature Controls -->
-        <div class="feature-controls">
+        <!-- <div class="feature-controls">
             <div class="feature-tabs">
                 <button class="tab active" data-tab="alien">Alien Diplomacy</button>
                 <button class="tab" data-tab="evolution">Universe Evolution</button>
@@ -148,61 +148,16 @@
                     <div id="alien-contacts-list" class="event-list"></div>
                 </div>
             </div>
-            <div class="feature-section" id="tab-evolution" style="display:none;">
-                <h2>Universe Evolution <span class="tooltip-icon" data-tooltip="Simulate the long-term evolution of the solar system and galaxy as your megastructure changes the cosmos.">?</span></h2>
-                <div class="universe-controls">
-                    <button id="simulate-evolution" title="Simulate the evolution of the universe over the selected number of years."><span class="tooltip-icon" data-tooltip="Advance time and witness cosmic events like supernovae, black holes, and galactic expansion.">?</span>Simulate Evolution</button>
-                    <input type="range" id="evolution-years" min="1000" max="1000000" step="1000" value="10000" title="Select how many years to simulate in the universe evolution."><span class="tooltip-icon" data-tooltip="Drag to select how many years to simulate. Longer times reveal more dramatic changes.">?</span>
-                    <span id="evolution-years-value" title="Displays the number of years to simulate."><span class="tooltip-icon" data-tooltip="Shows the currently selected number of years for the simulation.">?</span>10,000 years</span>
-                    <div id="universe-events-list" class="event-list"></div>
-                </div>
+            <div class="feature-section" id="tab-evolution">
+                <!-- Universe Evolution content here -->
             </div>
-            <div class="feature-section" id="tab-custom" style="display:none;">
-                <h2>Custom Megastructure Editor <span class="tooltip-icon" data-tooltip="Design your own Dyson Sphere! Choose collector, habitat, transport, and thermal patterns for a unique structure.">?</span></h2>
-                <div class="custom-structure-controls">
-                    <div class="pattern-selectors">
-                        <select id="collector-pattern" title="Choose the collector pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the arrangement of energy collectors for your custom sphere.">?</span>
-                            <option value="spiral">Spiral</option>
-                            <option value="fractal">Fractal</option>
-                            <option value="lattice">Lattice</option>
-                            <option value="wave">Wave</option>
-                            <option value="quantum">Quantum</option>
-                        </select>
-                        <select id="habitat-pattern" title="Choose the habitat pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the arrangement of habitats for your custom sphere.">?</span>
-                            <option value="clusters">Clusters</option>
-                            <option value="rings">Rings</option>
-                            <option value="nodes">Nodes</option>
-                            <option value="spiral">Spiral</option>
-                            <option value="fractal">Fractal</option>
-                        </select>
-                        <select id="transport-pattern" title="Choose the transport network pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the transport network pattern for your custom sphere.">?</span>
-                            <option value="grid">Grid</option>
-                            <option value="spiral">Spiral</option>
-                            <option value="quantum">Quantum</option>
-                            <option value="void">Void</option>
-                        </select>
-                        <select id="thermal-pattern" title="Choose the thermal management pattern for your custom megastructure."><span class="tooltip-icon" data-tooltip="Select the thermal management pattern for your custom sphere.">?</span>
-                            <option value="radial">Radial</option>
-                            <option value="spiral">Spiral</option>
-                            <option value="quantum">Quantum</option>
-                            <option value="void">Void</option>
-                        </select>
-                    </div>
-                    <button id="generate-custom" title="Generate a custom megastructure with the selected patterns."><span class="tooltip-icon" data-tooltip="Create a new custom megastructure using your selected patterns.">?</span>Generate Custom Structure</button>
-                    <div id="custom-structures-list" class="structure-list"></div>
-                </div>
+            <div class="feature-section" id="tab-custom">
+                <!-- Custom Megastructure content here -->
             </div>
-            <div class="feature-section" id="tab-virtual" style="display:none;">
-                <h2>Virtual Civilization <span class="tooltip-icon" data-tooltip="Upload consciousness, create digital realities, and watch your virtual society evolve inside the Dyson Sphere.">?</span></h2>
-                <div class="virtual-civilization-controls">
-                    <button id="initialize-virtual" title="Initialize a new virtual civilization inside the Dyson Sphere."><span class="tooltip-icon" data-tooltip="Start a new digital civilization within your megastructure.">?</span>Initialize Virtual Civilization</button>
-                    <button id="upload-consciousness" title="Upload digital consciousnesses into the virtual civilization."><span class="tooltip-icon" data-tooltip="Upload digital minds to populate your virtual society.">?</span>Upload Consciousness</button>
-                    <input type="number" id="consciousness-count" min="1" max="1000" value="100" title="Number of consciousnesses to upload."><span class="tooltip-icon" data-tooltip="Set how many digital minds to upload at once.">?</span>
-                    <button id="create-reality" title="Create a new virtual reality environment for digital life."><span class="tooltip-icon" data-tooltip="Create a new digital world for your uploaded minds to inhabit.">?</span>Create New Reality</button>
-                    <div id="virtual-events-list" class="event-list"></div>
-                </div>
+            <div class="feature-section" id="tab-virtual">
+                <!-- Virtual Civilization content here -->
             </div>
-        </div>
+        </div> -->
 
         <div class="results" style="display: none;">
             <div class="metrics-panel">
@@ -270,7 +225,8 @@
                         <div id="construction-progress"></div>
                     </div>
                 </div>
-                <div class="grid-container" id="orbital-grid"></div>
+                <div id="orbital-grid" class="grid-container"></div>
+                <div id="current-year-events" class="current-year-events-box"></div>
                 <div class="grid-legend">
                     <div class="legend-item"><span class="symbol collector">O</span> Collector</div>
                     <div class="legend-item"><span class="symbol habitat">#</span> Habitat</div>
@@ -289,10 +245,8 @@
             <h2>Simulation Story</h2>
             <div class="story-container">
                 <div id="story-content" class="story-text"></div>
+                <div id="story-loading" class="story-loading" style="display:none;">Generating story...</div>
             </div>
-            <button id="generate-story" class="glow-button" onclick="generateStory()">
-                Generate Story
-            </button>
         </div>
     </div>
 
@@ -335,6 +289,23 @@
 
         #generate-story:active {
             transform: scale(0.95);
+        }
+
+        .current-year-events-box {
+            margin: 1.5rem 0 2rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ffea;
+            border-radius: 10px;
+            color: #00ffea;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            min-height: 2.5rem;
+            box-shadow: 0 0 16px #00ffea44;
+            transition: background 0.3s;
+        }
+        .current-year-events-box .event-entry {
+            margin-bottom: 0.5rem;
         }
     </style>
 

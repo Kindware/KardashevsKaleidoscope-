@@ -1391,7 +1391,8 @@ class DysonSpherePlanner:
         MILKY_WAY_RADIUS = 50000
         AVERAGE_STAR_DISTANCE = 5
         PROBE_SPEED = self.user_vars.get('probe_speed', 0.1)
-        CONSTRUCTION_TIME = self.user_vars.get('sphere_construction_time', 400)
+        CONSTRUCTION_SPEED_MOD = self.user_vars.get('construction_speed_mod', 1)
+        CONSTRUCTION_TIME = 400 / CONSTRUCTION_SPEED_MOD
         PROBE_BUILD_TIME = self.user_vars.get('probe_build_time', 50)
         current_year = start_year
         expansion_data = []
@@ -1567,7 +1568,7 @@ class DysonSpherePlanner:
         """Generate a sci-fi story from the simulation data using Gemma 3:12B."""
         try:
             # Format the simulation data for the AI
-            story_prompt = f"""Create an engaging sci-fi story about the construction of a Dyson Sphere. Use these key events and details:
+            story_prompt = f"""Create an engaging, highly detailed sci-fi story about the construction of a Dyson Sphere. Use these key events and details:
 
 Strategy: {self.strategy.name}
 Start Year: {self.start_year}
@@ -1576,7 +1577,7 @@ Colony Included: {'Yes' if self.include_colony else 'No'}
 Key Events:
 {chr(10).join([f"- {event}" for phase in self.simulation_results.values() for event in phase.event_log])}
 
-Please write a compelling narrative that weaves these events into a cohesive story about humanity's journey to build a Dyson Sphere. Focus on the challenges, breakthroughs, and the scale of this megastructure project. Make it engaging and scientifically plausible while maintaining a sense of wonder and achievement."""
+Please write a long, immersive, and vivid narrative (at least 8-10 paragraphs, or more if possible) that weaves these events into a cohesive story about humanity's journey to build a Dyson Sphere. Include character perspectives, emotional moments, scientific breakthroughs, setbacks, and the broader impact on civilization. Make it engaging, scientifically plausible, and full of wonder and drama. Do not summarize—show the journey in detail, with dialogue, inner thoughts, and world-building."""
 
             # Call Ollama API
             response = requests.post('http://localhost:11434/api/generate',

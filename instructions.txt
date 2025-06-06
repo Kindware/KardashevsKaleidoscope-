@@ -1,0 +1,117 @@
+# Dyson Sphere Planner: Instruction Manual
+
+Welcome to the Dyson Sphere Planner! This is your command center for designing, simulating, and storytelling the construction of humanity's greatest megastructure. Whether you're a sci-fi enthusiast, a strategy mastermind, or just curious about cosmic engineering, this guide will help you get the most out of every feature.
+
+---
+
+## Table of Contents
+1. Overview
+2. Main Features
+3. Advanced Features
+4. Simulation Phases Explained
+5. Using the Event Log
+6. AI Story Generation
+7. Walkthroughs
+8. Tips & Tricks
+
+---
+
+## 1. Overview
+The Dyson Sphere Planner lets you:
+- Choose your construction strategy (Swarm, Ring, Bubble, Quantum, Temporal, Exotic, Cosmic, Dimensional, Singularity, Omniversal)
+- Simulate every phase of the build, from mining asteroids to managing interstellar colonies
+- Experience dynamic, sci-fi event logs for every phase
+- Generate epic, AI-powered stories of your simulation
+- Explore advanced features like Alien Diplomacy, Universe Evolution, Custom Megastructures, and Virtual Civilizations
+
+---
+
+## 2. Main Features
+- **Tabbed Interface:** Switch between core features using the glowing tabs at the top.
+- **Simulation Controls:** Play, pause, step forward/back, and adjust simulation speed.
+- **Orbital Grid:** Visualize your structure's progress in real time.
+- **Tooltips:** Hover over any button or control for a sci-fi styled explanation.
+- **Event Log:** Every phase generates unique, timestamped events—no two runs are the same!
+
+---
+
+## 3. Advanced Features
+- **Alien Diplomacy:** Encounter and negotiate with alien civilizations. Outcomes affect your project!
+- **Universe Evolution:** Watch the cosmos change as your sphere grows—supernovas, black holes, and more.
+- **Custom Megastructure Editor:** Design your own megastructures with unique patterns and properties.
+- **Virtual Civilization:** Simulate digital societies living inside your Dyson Sphere.
+
+---
+
+## 4. Simulation Phases Explained
+- **Material Extraction:** Mine asteroids, planets, and even quantum resources. Watch for rare discoveries and hazards.
+- **Transport Systems:** Build and optimize networks—quantum teleporters, wormholes, and more.
+- **Assembly:** Construct the sphere with advanced robotics, AI, and exotic materials.
+- **Thermal Management:** Keep your megastructure cool with cutting-edge tech.
+- **Colony Development:** (Optional) Grow and manage orbital colonies, balancing resources and population.
+- **Advanced Phases:** Unlock cosmic, dimensional, and singularity-level engineering as you progress.
+
+---
+
+## 5. Using the Event Log
+- Every phase generates a lively, non-repeating event log.
+- Events are timestamped and scenario-appropriate (from mundane to cosmic).
+- Use the log to track progress, spot breakthroughs, and enjoy the story of your build.
+
+---
+
+## 6. AI Story Generation
+- Click the **Generate Story** button to have the AI (Gemma 3:12B) turn your simulation into a multi-paragraph sci-fi epic.
+- The story incorporates your strategy, key events, and even character perspectives.
+- Each story is unique—try different strategies for new adventures!
+
+---
+
+## 7. Walkthroughs
+
+### Walkthrough 1: Classic Dyson Swarm
+1. Select **Swarm** as your strategy.
+2. Set your start year (e.g., 2025).
+3. (Optional) Enable Colony Development.
+4. Click **Play** to start the simulation.
+5. Watch the event log for mining breakthroughs and swarm coordination challenges.
+6. When ready, click **Generate Story** for a classic sci-fi saga.
+
+### Walkthrough 2: Quantum Engineering
+1. Choose **Quantum** strategy.
+2. Adjust user variables for maximum quantum efficiency.
+3. Run the simulation and observe quantum tunneling, entanglement mining, and more.
+4. Use the event log to spot quantum anomalies.
+5. Generate a story—see how the AI weaves quantum weirdness into your narrative!
+
+### Walkthrough 3: Alien Diplomacy
+1. Switch to the **Alien Diplomacy** tab.
+2. Initiate first contact with a new civilization.
+3. Negotiate, trade, or form alliances—outcomes affect your resources and risks.
+4. Return to the main simulation and see how diplomacy changes your build.
+
+### Walkthrough 4: Custom Megastructure
+1. Open the **Custom Megastructure Editor**.
+2. Design your own collector, habitat, and transport patterns.
+3. Save and apply your design.
+4. Run the simulation and watch your custom structure come to life.
+
+### Walkthrough 5: Virtual Civilization
+1. Enter the **Virtual Civilization** tab.
+2. Create a digital society—set parameters for population, time dilation, and more.
+3. Simulate their evolution and see how they interact with your Dyson Sphere.
+
+---
+
+## 8. Tips & Tricks
+- Hover over any control for instant help.
+- Try different strategies and user variables for wildly different outcomes.
+- Use the event log and AI story to inspire your own sci-fi writing or worldbuilding.
+- Share your favorite stories and screenshots with friends!
+- Don't forget to save your progress and push your changes often.
+
+---
+
+**Thank you for building the future!**
+
+If you have feedback or want to suggest new features, let us know. The universe is yours to shape! 

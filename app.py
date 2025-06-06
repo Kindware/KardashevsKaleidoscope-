@@ -4,6 +4,7 @@ import json
 import time
 from datetime import datetime
 import random
+import math
 
 app = Flask(__name__)
 
@@ -29,13 +30,13 @@ def generate_plan():
         'colony_life_cap': int(data.get('colony_life_cap', 1000000)),
         'colony_resource_cap': int(data.get('colony_resource_cap', 500000)),
         'probe_speed': float(data.get('probe_speed', 0.1)),
-        'sphere_construction_time': int(data.get('sphere_construction_time', 400)),
         'probe_build_time': int(data.get('probe_build_time', 50)),
         'quantum_network_size': int(data.get('quantum_network_size', 1000)),
         'exotic_matter_vol': float(data.get('exotic_matter_vol', 1000000)),
         'pocket_universes': int(data.get('pocket_universes', 0)),
         'dimensions_accessed': int(data.get('dimensions_accessed', 1)),
         'ai_evolution_level': float(data.get('ai_evolution_level', 2)),
+        'construction_speed_mod': float(data.get('construction_speed_mod', 1)),
     }
     
     planner = DysonSpherePlanner(strategy, include_colony, start_year, user_vars)
@@ -53,75 +54,232 @@ def generate_plan():
         }
     }
     
-    # Capture the plan generation
-    phases = []
-    # Add advanced phases with event logs
-    if strategy in [DysonStrategy.COSMIC, DysonStrategy.DIMENSIONAL, DysonStrategy.SINGULARITY, DysonStrategy.OMNIVERSAL]:
-        req, events = planner.simulate_cosmic_engineering()
-        phases.append(("Cosmic Engineering", req, events))
-        req, events = planner.simulate_dimensional_engineering()
-        phases.append(("Dimensional Engineering", req, events))
-        req, events = planner.simulate_singularity_evolution()
-        phases.append(("Singularity Evolution", req, events))
-    # Add core phases (now with event logs)
-    req = planner.simulate_material_extraction()
-    phases.append(("Material Extraction", req, getattr(req, 'event_log', [])))
-    req = planner.simulate_transport_system()
-    phases.append(("Transport System", req, getattr(req, 'event_log', [])))
-    req = planner.simulate_assembly()
-    phases.append(("Assembly", req, getattr(req, 'event_log', [])))
-    req = planner.simulate_thermal_management()
-    phases.append(("Thermal Management", req, getattr(req, 'event_log', [])))
+    # --- Overlapping/Parallel Phases Refactor ---
+    # 1. Calculate phase durations and overlap rules
+    # Overlap rules: (percentages can be tweaked for realism)
+    # - Transport starts at 30% of Extraction
+    # - Assembly starts at 30% of Transport
+    # - Thermal starts at 30% of Assembly
+    # - Colony starts at 50% of Assembly (if enabled)
+
+    # Simulate all phases to get durations
+    extraction_req = planner.simulate_material_extraction()
+    extraction_time = int(extraction_req.time_years)
+    transport_req = planner.simulate_transport_system()
+    transport_time = int(transport_req.time_years)
+    assembly_req = planner.simulate_assembly()
+    assembly_time = int(assembly_req.time_years)
+    thermal_req = planner.simulate_thermal_management()
+    thermal_time = int(thermal_req.time_years)
     if include_colony:
-        req = planner.simulate_colony_setup()
-        phases.append(("Colony Setup", req, getattr(req, 'event_log', [])))
-    
-    # Process phases
-    total_time = 0
-    current_year = start_year
-    
-    for phase_name, requirements, event_log in phases:
+        colony_req = planner.simulate_colony_setup()
+        colony_time = int(colony_req.time_years)
+    else:
+        colony_req = None
+        colony_time = 0
+
+    # Advanced phases (if any)
+    advanced_phases = []
+    if strategy in [DysonStrategy.COSMIC, DysonStrategy.DIMENSIONAL, DysonStrategy.SINGULARITY, DysonStrategy.OMNIVERSAL]:
+        cosmic_req, cosmic_events = planner.simulate_cosmic_engineering()
+        dimensional_req, dimensional_events = planner.simulate_dimensional_engineering()
+        singularity_req, singularity_events = planner.simulate_singularity_evolution()
+        advanced_phases = [
+            ("Cosmic Engineering", cosmic_req, cosmic_events),
+            ("Dimensional Engineering", dimensional_req, dimensional_events),
+            ("Singularity Evolution", singularity_req, singularity_events)
+        ]
+
+    # Calculate start/end years for each phase (with overlap)
+    extraction_start = start_year
+    extraction_end = extraction_start + extraction_time
+    transport_start = extraction_start + int(0.3 * extraction_time)
+    transport_end = transport_start + transport_time
+    assembly_start = transport_start + int(0.3 * transport_time)
+    assembly_end = assembly_start + assembly_time
+    thermal_start = assembly_start + int(0.3 * assembly_time)
+    thermal_end = thermal_start + thermal_time
+    if include_colony:
+        colony_start = assembly_start + int(0.5 * assembly_time)
+        colony_end = colony_start + colony_time
+    else:
+        colony_start = colony_end = 0
+
+    # Advanced phase offsets (after core phases)
+    adv_offset = max(extraction_end, transport_end, assembly_end, thermal_end, colony_end)
+    adv_phase_schedules = []
+    for i, (name, req, events) in enumerate(advanced_phases):
+        adv_start = adv_offset + i * 100  # Stagger advanced phases
+        adv_end = adv_start + int(req.time_years)
+        adv_phase_schedules.append((name, req, events, adv_start, adv_end))
+
+    # Collect all phases with their schedules
+    phase_schedules = [
+        ("Material Extraction", extraction_req, getattr(extraction_req, 'event_log', []), extraction_start, extraction_end),
+        ("Transport System", transport_req, getattr(transport_req, 'event_log', []), transport_start, transport_end),
+        ("Assembly", assembly_req, getattr(assembly_req, 'event_log', []), assembly_start, assembly_end),
+        ("Thermal Management", thermal_req, getattr(thermal_req, 'event_log', []), thermal_start, thermal_end)
+    ]
+    if include_colony:
+        phase_schedules.append(("Colony Setup", colony_req, getattr(colony_req, 'event_log', []), colony_start, colony_end))
+    for name, req, events, adv_start, adv_end in adv_phase_schedules:
+        phase_schedules.append((name, req, events, adv_start, adv_end))
+
+    # 2. Loop by year, process all active phases in parallel
+    all_years = set()
+    for _, _, _, start, end in phase_schedules:
+        all_years.update(range(start, end))
+    all_years = sorted(all_years)
+    total_time = all_years[-1] - start_year + 1
+
+    # Prepare phase data for output
+    plan_data['phases'] = []
+    for name, req, events, start, end in phase_schedules:
         phase_data = {
-            'name': phase_name,
-            'time': requirements.time_years,
-            'mass': requirements.mass_tons,
-            'energy': requirements.energy_petawatts,
-            'risks': requirements.risks,
-            'start_year': current_year,
-            'end_year': current_year + requirements.time_years,
-            'event_log': event_log if event_log else ["No major events occurred during this phase."]
+            'name': name,
+            'time': req.time_years,
+            'mass': req.mass_tons,
+            'energy': req.energy_petawatts,
+            'risks': req.risks,
+            'start_year': start,
+            'end_year': end,
+            'event_log': events if events else ["No major events occurred during this phase."]
         }
         plan_data['phases'].append(phase_data)
-        total_time += requirements.time_years
-        
-        # Generate visualization frames for this phase
-        for year in range(int(requirements.time_years)):
-            grid = planner.generate_orbital_grid()
-            # Ensure grid is a 2D array of single-character strings
-            grid = [list(row) if isinstance(row, str) else row for row in grid]
-            # Animate: reveal more tiles as progress increases
-            progress = (year + 1) / requirements.time_years
-            flat_indices = [(i, j) for i in range(len(grid)) for j in range(len(grid[i])) if grid[i][j] != ' ']
-            reveal_count = int(progress * len(flat_indices))
-            revealed = set(flat_indices[:reveal_count])
-            animated_grid = [[' ' for _ in range(len(grid[0]))] for _ in range(len(grid))]
-            for idx, (i, j) in enumerate(flat_indices):
-                if (i, j) in revealed:
-                    animated_grid[i][j] = grid[i][j]
-            frame = {
-                'year': current_year + year,
-                'phase': phase_name,
-                'progress': progress,
-                'grid': animated_grid
-            }
-            plan_data['visualization']['frames'].append(frame)
-            
-        current_year += requirements.time_years
-    
+
+    # 3. Yearly simulation: aggregate events and grid changes
+    for idx, year in enumerate(all_years):
+        # Determine active phases
+        active_phases = [
+            (name, req, events, start, end)
+            for name, req, events, start, end in phase_schedules
+            if start <= year < end
+        ]
+        # Aggregate events for this year
+        year_events = []
+        for name, req, events, start, end in active_phases:
+            for ev in events:
+                if f"Year {year}:" in ev:
+                    year_events.append(ev)
+        # Progress: use overall progress as fraction of total years
+        sim_progress = (year - start_year) / max(1, total_time)
+        grid = planner.generate_orbital_grid()
+        size = len(grid)
+        animated_grid = [[' ' for _ in range(size)] for _ in range(size)]
+        center = size // 2
+        # 1. Always show resources, hot/cold zones
+        for i in range(size):
+            for j in range(size):
+                cell = grid[i][j]
+                if cell in ['R', 'r', 'H', 'C']:
+                    animated_grid[i][j] = cell
+        # 2. Always show Earth as first habitat (center)
+        animated_grid[center][center] = '#'
+        # 3. Gradually add collectors in a circular/clockwise pattern
+        collector_positions = [(i, j) for i in range(size) for j in range(size) if grid[i][j] == 'O']
+        n_collectors = max(1, int(sim_progress * len(collector_positions)))
+        def angle_from_center(pos):
+            dx, dy = pos[0] - center, pos[1] - center
+            return (math.atan2(dy, dx) + 2 * math.pi) % (2 * math.pi)
+        collector_positions_sorted = sorted(collector_positions, key=angle_from_center)
+        active_collectors = collector_positions_sorted[:n_collectors]
+        for (i, j) in active_collectors:
+            animated_grid[i][j] = 'O'
+        # 4. Draw traffic from center to each new collector (clocklike)
+        def draw_traffic_line(grid, start, end, symbol='T'):
+            x0, y0 = start
+            x1, y1 = end
+            dx = abs(x1 - x0)
+            dy = abs(y1 - y0)
+            x, y = x0, y0
+            sx = 1 if x0 < x1 else -1
+            sy = 1 if y0 < y1 else -1
+            if dx > dy:
+                err = dx / 2.0
+                while x != x1:
+                    if grid[x][y] == ' ':
+                        grid[x][y] = symbol
+                    err -= dy
+                    if err < 0:
+                        y += sy
+                        err += dx
+                    x += sx
+            else:
+                err = dy / 2.0
+                while y != y1:
+                    if grid[x][y] == ' ':
+                        grid[x][y] = symbol
+                    err -= dx
+                    if err < 0:
+                        x += sx
+                        err += dy
+                    y += sy
+            if grid[x][y] == ' ':
+                grid[x][y] = symbol
+        for (i, j) in active_collectors:
+            draw_traffic_line(animated_grid, (center, center), (i, j), symbol='T')
+        # 5. Gradually add additional habitats in a circular/clockwise pattern as progress increases
+        habitat_positions = [(i, j) for i in range(size) for j in range(size) if grid[i][j] == '#' and (i, j) != (center, center)]
+        # Start showing habitats at 20% progress, scale smoothly up to 100%
+        if sim_progress > 0.2:
+            # Use a smoother scaling function: sqrt(progress) gives a more gradual early growth
+            scaled_progress = (sim_progress - 0.2) / 0.8  # Normalize to 0-1 range after 20%
+            n_habitats = max(1, int(math.sqrt(scaled_progress) * len(habitat_positions)))
+        else:
+            n_habitats = 0
+        habitat_positions_sorted = sorted(habitat_positions, key=angle_from_center)
+        active_habitats = habitat_positions_sorted[:n_habitats]
+        for (i, j) in active_habitats:
+            animated_grid[i][j] = '#'
+        # 6. Event-driven grid modifications (from all year_events)
+        event_triggers = {
+            # Habitats
+            'colony wiped out': lambda grid: grid.__setitem__(center, [' ' for _ in range(size)]),
+            'habitat destroyed': lambda grid: grid[center].__setitem__(center, ' '),
+            'new habitat established': lambda grid: grid[center][center+1] == ' ' and grid[center].__setitem__(center+1, '#'),
+            'habitat expansion': lambda grid: [grid[center].__setitem__(j, '#') for j in range(size) if grid[center][j] == ' '],
+            # Collectors
+            'collector destroyed': lambda grid: [row.__setitem__(center, ' ') for row in grid],
+            'collector malfunction': lambda grid: [row.__setitem__(center, 'X') for row in grid],
+            'new collector array completed': lambda grid: [row.__setitem__(center, 'O') for row in grid],
+            'collector upgrade': lambda grid: [row.__setitem__(center, 'O') for row in grid],
+            # Traffic
+            'major traffic accident': lambda grid: [row.__setitem__(center, ' ') for row in grid],
+            'traffic breakthrough': lambda grid: [row.__setitem__(center, 'T') for row in grid],
+            'traffic rerouted': lambda grid: [row.__setitem__(center, 't') for row in grid],
+            # Resources
+            'resource depleted': lambda grid: [row.__setitem__(center, ' ') for row in grid],
+            'resource discovered': lambda grid: [row.__setitem__(center, 'R') for row in grid],
+            # Thermal
+            'thermal system failure': lambda grid: [row.__setitem__(center, 'H') for row in grid],
+            'thermal breakthrough': lambda grid: [row.__setitem__(center, 'C') for row in grid],
+            # Exotic/cosmic
+            'quantum anomaly': lambda grid: grid[center][center] == '#' and grid[center].__setitem__(center, 'Q'),
+            'black hole event': lambda grid: grid[center][center] == '#' and grid[center].__setitem__(center, 'B'),
+            'alien incursion': lambda grid: grid[center][center] == '#' and grid[center].__setitem__(center, 'A'),
+            'virtual civilization collapse': lambda grid: grid[center][center] == '#' and grid[center].__setitem__(center, 'V'),
+            'singularity event': lambda grid: grid[center][center] == '#' and grid[center].__setitem__(center, 'S'),
+        }
+        for ev in year_events:
+            for trigger, action in event_triggers.items():
+                if trigger in ev.lower():
+                    action(animated_grid)
+        # 7. Final year: show everything
+        if sim_progress >= 0.99:
+            animated_grid = [row[:] for row in grid]
+        frame = {
+            'year': year,
+            'phase': ', '.join([name for name, _, _, _, _ in active_phases]),
+            'progress': sim_progress,
+            'grid': animated_grid
+        }
+        plan_data['visualization']['frames'].append(frame)
+
+    plan_data['visualization']['total_years'] = total_time
+    plan_data['visualization']['current_year'] = start_year
     # Calculate total mass and energy
     total_mass = sum(phase['mass'] for phase in plan_data['phases'])
     total_energy = sum(phase['energy'] for phase in plan_data['phases'])
-    
     # Add metrics
     plan_data['metrics'] = {
         'total_time': total_time,
@@ -129,7 +287,7 @@ def generate_plan():
         'strategy': strategy.value,
         'include_colony': include_colony,
         'total_mass': total_mass,
-        'total_energy': total_energy
+        'total_energy': total_energy,
     }
     
     # Add advanced metrics if applicable
@@ -150,10 +308,6 @@ def generate_plan():
             'ai_evolution': round(ai_evolution, 2),
             'digital_realities': digital_realities
         })
-    
-    # Set visualization metadata
-    plan_data['visualization']['total_years'] = total_time
-    plan_data['visualization']['current_year'] = start_year
     
     return jsonify(plan_data)
 

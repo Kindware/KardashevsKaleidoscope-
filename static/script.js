@@ -48,13 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
             colony_life_cap: parseInt(document.getElementById('colony_life_cap').value),
             colony_resource_cap: parseInt(document.getElementById('colony_resource_cap').value),
             probe_speed: parseFloat(document.getElementById('probe_speed').value),
-            sphere_construction_time: parseInt(document.getElementById('sphere_construction_time').value),
             probe_build_time: parseInt(document.getElementById('probe_build_time').value),
             quantum_network_size: parseInt(document.getElementById('quantum_network_size').value),
             exotic_matter_vol: parseFloat(document.getElementById('exotic_matter_vol').value),
             pocket_universes: parseInt(document.getElementById('pocket_universes').value),
             dimensions_accessed: parseInt(document.getElementById('dimensions_accessed').value),
-            ai_evolution_level: parseFloat(document.getElementById('ai_evolution_level').value)
+            ai_evolution_level: parseFloat(document.getElementById('ai_evolution_level').value),
+            construction_speed_mod: parseFloat(document.getElementById('construction_speed_mod').value)
         };
         
         // Show loading state
@@ -151,7 +151,32 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Initialize visualization
             setNewPlanData(data);
-            
+            // --- STORY GENERATION ---
+            const storyContent = document.getElementById('story-content');
+            const storyLoading = document.getElementById('story-loading');
+            storyContent.textContent = '';
+            storyLoading.style.display = 'block';
+            // Automatically fetch the story
+            fetch('/generate_story', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    strategy: document.getElementById('strategy').value,
+                    start_year: parseInt(document.getElementById('start-year').value),
+                    include_colony: document.getElementById('include-colony').checked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                storyContent.textContent = data.story;
+                storyLoading.style.display = 'none';
+            })
+            .catch(error => {
+                storyContent.textContent = 'Error generating story. Please try again.';
+                storyLoading.style.display = 'none';
+            });
         } catch (error) {
             console.error('Error:', error);
             alert('Error generating plan. Please try again.');
@@ -374,12 +399,16 @@ function updateVisualization(data, frameIndexOverride) {
         if (yearDisplay) yearDisplay.textContent = '-';
         const progressBar = document.getElementById('construction-progress');
         if (progressBar) progressBar.style.width = '0%';
+        // Clear current year events
+        const eventsBox = document.getElementById('current-year-events');
+        if (eventsBox) eventsBox.innerHTML = '';
         return;
     }
     const visualization = data.visualization;
     const gridContainer = document.getElementById('orbital-grid');
     const yearDisplay = document.getElementById('current-year');
     const progressBar = document.getElementById('construction-progress');
+    const eventsBox = document.getElementById('current-year-events');
 
     // Calculate frame index safely
     const startYear = (data.metrics && data.metrics.start_year) ? data.metrics.start_year : 2024;
@@ -400,6 +429,7 @@ function updateVisualization(data, frameIndexOverride) {
     const grid = visualization.frames[frameIndex].grid;
     if (!grid) {
         gridContainer.innerHTML = '<div style="color:red;">No grid data for this year.</div>';
+        if (eventsBox) eventsBox.innerHTML = '';
         return;
     }
 
@@ -418,6 +448,25 @@ function updateVisualization(data, frameIndexOverride) {
                 case 'H': case 'C': cell.classList.add('thermal'); break;
             }
             gridContainer.appendChild(cell);
+        }
+    }
+
+    // --- Current Year Events Box ---
+    if (eventsBox) {
+        const currentYear = visualization.frames[frameIndex].year;
+        let allEvents = [];
+        if (data.phases) {
+            for (const phase of data.phases) {
+                if (phase.event_log && Array.isArray(phase.event_log)) {
+                    allEvents = allEvents.concat(phase.event_log);
+                }
+            }
+        }
+        const yearEvents = allEvents.filter(ev => ev.startsWith(`Year ${currentYear}:`));
+        if (yearEvents.length > 0) {
+            eventsBox.innerHTML = yearEvents.map(ev => `<div class="event-entry">${ev}</div>`).join('');
+        } else {
+            eventsBox.innerHTML = '<span style="color:#888;">No major events this year.</span>';
         }
     }
 }
